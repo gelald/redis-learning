@@ -23,6 +23,12 @@ public class RedisLockController {
     /**
      * 使用StringRedisTemplate方便用decrement方法
      * 如果使用RedisTemplate，那么需要自定义序列化方法，否则调用失败，提示ERR
+     *
+     * GenericJackson2JsonRedisSerializer、Jackson2JsonRedisSerializer是先将对象转为json，然后再保存到redis中是字符串，所以无法进行加1
+     *
+     * JdkSerializationRedisSerializer使用的jdk对象序列化，序列化后的值有类信息、版本号等，所以是一个包含很多字母的字符串，所以根本无法加1
+     *
+     * GenericToStringSerializer、StringRedisSerializer将字符串的值直接转为字节数组，所以保存到redis中是数字，所以可以进行加1
      */
     @Autowired
     private StringRedisTemplate redisTemplate;

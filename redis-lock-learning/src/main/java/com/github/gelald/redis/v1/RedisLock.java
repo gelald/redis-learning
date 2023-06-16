@@ -2,10 +2,10 @@ package com.github.gelald.redis.v1;
 
 import cn.hutool.core.lang.UUID;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -13,9 +13,9 @@ import java.util.concurrent.TimeUnit;
  * Date 2023/6/15
  */
 @Slf4j
-@Component
+@Component("RedisLock1")
 public class RedisLock {
-    @Autowired
+    @Resource
     private RedisTemplate<String, Object> redisTemplate;
     //锁的前缀名称
     private static final String LOCK_PREFIX = "GET_LOCK";
@@ -26,8 +26,8 @@ public class RedisLock {
         String key = LOCK_PREFIX + lockName;
         String value = UUID.randomUUID().toString(true);
         //加锁
-        Boolean setFlag = redisTemplate.opsForValue().setIfAbsent(key, value);
-        if (Boolean.TRUE.equals(setFlag)) {
+        Boolean lockSuccessfully = redisTemplate.opsForValue().setIfAbsent(key, value);
+        if (Boolean.TRUE.equals(lockSuccessfully)) {
             try {
                 log.info(" ************ Redis加锁成功：{} ************ ", key);
                 //设置过期时间，防止出现死锁，程序崩溃、服务器宕机都是不会释放锁的

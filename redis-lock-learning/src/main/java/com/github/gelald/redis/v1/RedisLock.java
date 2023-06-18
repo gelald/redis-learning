@@ -24,9 +24,8 @@ public class RedisLock {
 
     public void lock(String lockName) {
         String key = LOCK_PREFIX + lockName;
-        String value = UUID.randomUUID().toString(true);
         //加锁
-        Boolean lockSuccessfully = redisTemplate.opsForValue().setIfAbsent(key, value);
+        Boolean lockSuccessfully = redisTemplate.opsForValue().setIfAbsent(key, null);
         if (Boolean.TRUE.equals(lockSuccessfully)) {
             try {
                 log.info(" ************ Redis加锁成功：{} ************ ", key);
@@ -47,3 +46,6 @@ public class RedisLock {
         }
     }
 }
+
+
+//https://blog.csdn.net/weixin_45807440/article/details/126122646

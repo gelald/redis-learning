@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
  * Date 2023/6/15
  */
 @Slf4j
+@Deprecated
 @Component("RedisLock1")
 public class RedisLock {
     @Resource

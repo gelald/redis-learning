@@ -11,22 +11,20 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
- * 代码思路：为了解决同一时刻大量线程都没有从缓存中查询到数据而直接访问数据库的问题，
- * 引入Redis分布式锁，只有拿到了分布式锁的请求才可以去访问数据库，最后在finally中释放锁，
- * 没有拿到锁的线程等待，等待完成后重新去获取锁
- * 同一时刻，请求同一条数据只有一个用户可以访问数据库，那么这个时候数据库就不会有那么大的压力
+ * 代码思路：为了解决加锁后，程序崩溃等问题导致锁无法被释放、其他需要拿锁的线程一直等待的问题，
+ * 在获取Redis锁的时候加上过期时间，到期自动释放锁，即使程序崩溃也可以让其他线程拿到锁
  * </p>
  *
  * <p>
- * 存在问题：如果拿到锁，正在执行业务逻辑，程序挂了，就没法释放锁了，其他请求就再也没办法拿到锁了
+ * 存在问题：释放的锁可能已经是已到期释放，其他线程获取的相同的锁了
  * </p>
  *
  * @author WuYingBin
- * date: 2023/6/19
+ * date: 2023/6/20
  */
 @Slf4j
 @Service
-public class RedisLockV1 implements RedisLock {
+public class RedisLockV2 implements RedisLock {
     @Resource
     private RedisTemplate<String, String> redisTemplate;
 
@@ -42,7 +40,7 @@ public class RedisLockV1 implements RedisLock {
         if (StrUtil.isEmpty(data)) {
             log.info("缓存数据为空，尝试获取锁去查询数据库");
             try {
-                Boolean ifAbsent = redisTemplate.opsForValue().setIfAbsent(lockKey, "lock");
+                Boolean ifAbsent = redisTemplate.opsForValue().setIfAbsent(lockKey, "lock", 30, TimeUnit.SECONDS);
                 if (Boolean.TRUE.equals(ifAbsent)) {
                     //只有拿到锁的线程才能从数据库中获取数据
                     log.info("成功拿到锁，正在从数据库中获取数据......");

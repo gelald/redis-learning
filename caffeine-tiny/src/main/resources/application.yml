@@ -1,0 +1,23 @@
+server:
+  port: 18861
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    tags-sorter: order
+    operations-sorter: alpha
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  group-configs:
+    - group: 'default'
+      display-name: 'caffeine-tiny-cases'
+      paths-to-match: '/**'
+      packages-to-scan: com.github.gelald.caffeine
+  default-flat-param-object: true
+
+knife4j:
+  enable: true
+  setting:
+    language: ZH_CN

@@ -11,6 +11,8 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.types.Expiration;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
+
 /**
  * @author ngwingbun
  * date: 2024/7/20
@@ -20,13 +22,18 @@ import org.springframework.stereotype.Component;
 public class NativeRedisHandler {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+    private static final String LOCK_VALUE = "locked";
 
     public Object process(ProceedingJoinPoint joinPoint, String lockKey, RequestCache requestLock) {
         // 使用RedisCallback接口执行set命令，设置锁键；设置额外选项：过期时间和SET_IF_ABSENT选项
-        final Boolean success = stringRedisTemplate.execute(
-                (RedisCallback<Boolean>) connection -> connection.set(lockKey.getBytes(), new byte[0],
-                        Expiration.from(requestLock.expire(), requestLock.timeUnit()),
-                        RedisStringCommands.SetOption.SET_IF_ABSENT));
+        final Boolean success = stringRedisTemplate.execute((RedisCallback<Boolean>) connection -> {
+            RedisStringCommands stringCommands = connection.stringCommands();
+            return stringCommands.set(
+                    lockKey.getBytes(StandardCharsets.UTF_8),
+                    LOCK_VALUE.getBytes(StandardCharsets.UTF_8),
+                    Expiration.from(requestLock.expire(), requestLock.timeUnit()),
+                    RedisStringCommands.SetOption.SET_IF_ABSENT);
+        });
         if (Boolean.FALSE.equals(success)) {
             throw new BusinessException(1, "您的操作太快了,请稍后重试");
         }

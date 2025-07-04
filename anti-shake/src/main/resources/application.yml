@@ -1,0 +1,13 @@
+server:
+  port: 12999
+
+anti-shake:
+  implement-type: native_redis
+
+spring:
+  data:
+    redis:
+      host: ${redis_host}
+      port: ${redis_port}
+      password: ${redis_pass}
+      database: 0

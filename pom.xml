@@ -9,6 +9,7 @@
     <modules>
         <module>caffeine-tiny</module>
         <module>redis-tiny</module>
+        <module>anti-shake</module>
     </modules>
 
     <properties>

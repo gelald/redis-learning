@@ -10,4 +10,23 @@ spring:
       host: ${redis_host}
       port: ${redis_port}
       password: ${redis_pass}
-      database: 0
+      database: ${redis_db}
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  group-configs:
+    - group: 'default'
+      display-name: 'anti-shake-cases'
+      paths-to-match: '/**'
+      packages-to-scan: com.github.gelald.redis
+  default-flat-param-object: true
+
+knife4j:
+  enable: true
+  setting:
+    language: ZH_CN

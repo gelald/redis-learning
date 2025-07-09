@@ -24,16 +24,16 @@ public @interface RequestCache {
     /**
      * redis锁过期时间
      *
-     * @return 默认2秒
+     * @return 默认1500毫秒
      */
-    int expire() default 2;
+    int expire() default 1500;
 
     /**
      * redis锁过期时间单位
      *
-     * @return 默认单位为秒
+     * @return 默认单位为毫秒
      */
-    TimeUnit timeUnit() default TimeUnit.SECONDS;
+    TimeUnit timeUnit() default TimeUnit.MILLISECONDS;
 
     /**
      * redis  key分隔符

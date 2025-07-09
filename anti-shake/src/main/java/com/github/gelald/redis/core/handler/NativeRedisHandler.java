@@ -1,10 +1,9 @@
-package com.github.gelald.redis.core;
+package com.github.gelald.redis.core.handler;
 
 import com.github.gelald.redis.annotation.RequestCache;
 import com.github.gelald.redis.exception.BusinessException;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.RedisStringCommands;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -14,18 +13,27 @@ import org.springframework.stereotype.Component;
 import java.nio.charset.StandardCharsets;
 
 /**
+ * 使用原生redis client来实现分布式锁进而避免重复提交
+ *
  * @author ngwingbun
  * date: 2024/7/20
  */
 @Slf4j
 @Component
 public class NativeRedisHandler {
-    @Autowired
-    private StringRedisTemplate stringRedisTemplate;
     private static final String LOCK_VALUE = "locked";
+    /**
+     * 直接使用stringRedisTemplate避免处理泛型
+     */
+    private final StringRedisTemplate stringRedisTemplate;
+
+    public NativeRedisHandler(StringRedisTemplate stringRedisTemplate) {
+        this.stringRedisTemplate = stringRedisTemplate;
+    }
 
     public Object process(ProceedingJoinPoint joinPoint, String lockKey, RequestCache requestLock) {
         // 使用RedisCallback接口执行set命令，设置锁键；设置额外选项：过期时间和SET_IF_ABSENT选项
+        // 执行setnx指令
         final Boolean success = stringRedisTemplate.execute((RedisCallback<Boolean>) connection -> {
             RedisStringCommands stringCommands = connection.stringCommands();
             return stringCommands.set(
@@ -34,9 +42,11 @@ public class NativeRedisHandler {
                     Expiration.from(requestLock.expire(), requestLock.timeUnit()),
                     RedisStringCommands.SetOption.SET_IF_ABSENT);
         });
+        // 如果执行不成功，那么说明同样的key在缓存中，当前参数还是防抖时间
         if (Boolean.FALSE.equals(success)) {
             throw new BusinessException(1, "您的操作太快了,请稍后重试");
         }
+        // 执行成功说明当前参数通过了防抖检测，执行业务
         try {
             return joinPoint.proceed();
         } catch (Throwable throwable) {

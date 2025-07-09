@@ -12,6 +12,9 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "anti-shake")
 public class AntiShakeProperties {
+    /**
+     * 接口防抖的实现方式
+     */
     private ImplementType implementType;
 
     public enum ImplementType {

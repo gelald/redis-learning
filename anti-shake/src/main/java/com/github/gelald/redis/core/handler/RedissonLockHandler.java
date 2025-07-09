@@ -1,4 +1,4 @@
-package com.github.gelald.redis.core;
+package com.github.gelald.redis.core.handler;
 
 import com.github.gelald.redis.annotation.RequestCache;
 import com.github.gelald.redis.exception.BusinessException;

@@ -17,6 +17,7 @@
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring-boot.version>3.2.6</spring-boot.version>
+        <redisson-spring-boot.version>3.24.3</redisson-spring-boot.version>
         <caffeine.version>3.1.8</caffeine.version>
         <hutool.version>5.8.25</hutool.version>
         <knife4j.version>4.4.0</knife4j.version>
@@ -35,6 +36,11 @@
                 <groupId>com.github.ben-manes.caffeine</groupId>
                 <artifactId>caffeine</artifactId>
                 <version>${caffeine.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson-spring-boot-starter</artifactId>
+                <version>${redisson-spring-boot.version}</version>
             </dependency>
             <dependency>
                 <groupId>cn.hutool</groupId>

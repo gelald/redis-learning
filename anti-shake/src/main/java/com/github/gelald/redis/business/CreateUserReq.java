@@ -6,11 +6,13 @@ import lombok.Data;
 import java.util.List;
 
 /**
+ * 请求DTO
+ *
  * @author ngwingbun
  * date: 2024/7/20
  */
 @Data
-public class AddReq {
+public class CreateUserReq {
     /**
      * 用户名称
      */

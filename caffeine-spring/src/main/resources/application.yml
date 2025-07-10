@@ -1,0 +1,21 @@
+server:
+  port: 18871
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  group-configs:
+    - group: 'default'
+      display-name: 'caffeine-spring-cache-cases'
+      paths-to-match: '/**'
+      packages-to-scan: com.github.gelald.caffeine
+  default-flat-param-object: true
+
+knife4j:
+  enable: true
+  setting:
+    language: ZH_CN

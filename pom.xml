@@ -10,6 +10,9 @@
         <module>caffeine-tiny</module>
         <module>redis-tiny</module>
         <module>anti-shake</module>
+        <module>caffeine-spring</module>
+        <module>spring-cache</module>
+        <module>double-level-cache</module>
     </modules>
 
     <properties>

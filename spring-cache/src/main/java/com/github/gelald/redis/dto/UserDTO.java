@@ -6,10 +6,9 @@ import lombok.Data;
 
 @Data
 public class UserDTO {
-    @NotNull
     private Long id;
-    @NotNull
+    @NotNull(message = "username不能为null")
     private String username;
-    @Email
+    @Email(message = "请填写正确格式的Email地址")
     private String email;
 }

@@ -2,6 +2,10 @@ server:
   port: 18872
 
 spring:
+  cache:
+    type: redis
+    cache-names: sc
+
   data:
     redis:
       # 连接地址

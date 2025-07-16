@@ -13,6 +13,7 @@
         <module>caffeine-spring</module>
         <module>spring-cache</module>
         <module>double-level-cache</module>
+        <module>cache-preheating</module>
     </modules>
 
     <properties>

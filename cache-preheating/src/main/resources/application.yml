@@ -53,4 +53,4 @@ knife4j:
 
 cache:
   init:
-    enable: true
+    enable: false

@@ -5,11 +5,11 @@ spring:
   data:
     redis:
       # 连接地址
-      host: localhost
+      host: ${REDIS_HOST}
       # 端口
-      port: 6379
+      port: ${REDIS_PORT}
       # 数据库
-      database: 1
+      database: ${REDIS_DB}
       # 用户名，如果有
       # username:
       # 密码，如果有

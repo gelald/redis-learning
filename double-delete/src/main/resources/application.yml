@@ -1,0 +1,52 @@
+server:
+  port: 18882
+
+spring:
+  data:
+    redis:
+      # 连接地址
+      host: ${REDIS_HOST}
+      # 端口
+      port: ${REDIS_PORT}
+      # 数据库
+      database: ${REDIS_DB}
+      # 用户名，如果有
+      # username:
+      # 密码，如果有
+      password: ${REDIS_PASSWORD}
+      # 连接超时
+      connect-timeout: 5s
+      # 读超时
+      timeout: 5s
+
+      # Lettuce 客户端的配置
+      lettuce:
+        # 连接池配置
+        pool:
+          # 最小空闲连接
+          min-idle: 0
+          # 最大空闲连接
+          max-idle: 8
+          # 最大活跃连接
+          max-active: 8
+          # 从连接池获取连接 最大超时时间，小于等于0则表示不会超时
+          max-wait: -1ms
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  group-configs:
+    - group: 'default'
+      display-name: 'double-delete-cases'
+      paths-to-match: '/**'
+      packages-to-scan: com.github.gelald.redis
+  default-flat-param-object: true
+
+knife4j:
+  enable: true
+  setting:
+    language: ZH_CN
